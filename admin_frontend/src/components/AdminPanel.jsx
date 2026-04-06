@@ -14,6 +14,7 @@ import StartupApplicationForm from './StartupApplicationForm';
 import UsersManagement from './UsersManagement';
 import UserLoginHistory from './UserLoginHistory';
 import StagePage from './StagePage';
+import DonationPage from './DonationPage';
 import ContactManagement from './ContactManagement';
 import ChatManagement from './ChatManagement';
 import AdminInterviewManager from './AdminInterviewManager';
@@ -169,7 +170,7 @@ const AdminPanel = () => {
       applications: 'Dashboard',
       users: 'User Login History',
       stage: 'Stage',
-      donation: 'Donations',
+      donation: 'General Settings',
       campaigns: 'Campaigns',
       settings: 'Settings',
       help: 'Help Center',
@@ -286,13 +287,7 @@ const AdminPanel = () => {
             )}
 
             {activeTab === 'donation' && (
-              <div className="p-8 animate-fade-in">
-                <div className="bg-white dark:bg-dark-card rounded-xl border border-gray-100 dark:border-dark-border p-8 text-center">
-                  <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-secondary dark:text-white mb-2">Donations</h3>
-                  <p className="text-gray-600 dark:text-gray-400">Donation management will be implemented here</p>
-                </div>
-              </div>
+              <DonationPage donations={donations} />
             )}
 
             {activeTab === 'campaigns' && (
