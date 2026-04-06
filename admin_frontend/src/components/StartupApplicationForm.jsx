@@ -1,5 +1,21 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Upload, X, FileText, ArrowRight, ArrowLeft, ChevronDown, ChevronUp, Plus, Minus, Calendar, Trash2, Check } from 'lucide-react';
+
+// Hook to handle click outside
+const useClickOutside = (ref, handler) => {
+  useEffect(() => {
+    const listener = (event) => {
+      if (!ref.current || ref.current.contains(event.target)) return;
+      handler(event);
+    };
+    document.addEventListener('mousedown', listener);
+    document.addEventListener('touchstart', listener);
+    return () => {
+      document.removeEventListener('mousedown', listener);
+      document.removeEventListener('touchstart', listener);
+    };
+  }, [ref, handler]);
+};
 
 const STEPS = [
   { id: 1, name: 'Personal Information' },
@@ -11,10 +27,13 @@ const STEPS = [
   { id: 7, name: 'Support & Additional Info' },
 ];
 
-// Custom Dropdown Component matching Figma
+// Custom Dropdown Component matching Figma exactly
 const CustomDropdown = ({ label, placeholder, options, value, onChange, required, showTags = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  
+  // Close dropdown when clicking outside
+  useClickOutside(dropdownRef, () => setIsOpen(false));
 
   const selectedOption = options.find(opt => opt.value === value);
 
@@ -30,20 +49,20 @@ const CustomDropdown = ({ label, placeholder, options, value, onChange, required
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-left flex items-center justify-between focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
       >
-        <span className={value ? 'text-secondary dark:text-white' : 'text-gray-400'}>
-          {selectedOption?.label || placeholder}
+        <span className={value ? 'text-secondary dark:text-white' : 'text-[#5B6178]'}>
+          {showTags && value ? placeholder : (selectedOption?.label || placeholder)}
         </span>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-gray-400" />
+          <ChevronUp className="w-5 h-5 text-[#5B6178]" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-gray-400" />
+          <ChevronDown className="w-5 h-5 text-[#5B6178]" />
         )}
       </button>
 
-      {/* Selected Tags */}
+      {/* Selected Tags - shown below dropdown */}
       {showTags && value && (
         <div className="flex flex-wrap gap-2 mt-2">
-          <span className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 dark:bg-dark-border rounded-lg text-sm text-secondary dark:text-gray-300">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-dark-border rounded-lg text-sm text-secondary dark:text-gray-300">
             {selectedOption?.label}
             <button onClick={() => onChange('')} className="hover:text-red-500 transition-colors">
               <X className="w-3.5 h-3.5" />
@@ -52,7 +71,7 @@ const CustomDropdown = ({ label, placeholder, options, value, onChange, required
         </div>
       )}
 
-      {/* Dropdown Menu */}
+      {/* Dropdown Menu - matching Figma with yellow highlight on first/selected item */}
       {isOpen && (
         <div className="absolute z-50 w-full mt-2 bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-xl shadow-lg overflow-hidden animate-fade-in">
           {options.map((option, index) => (
@@ -63,10 +82,12 @@ const CustomDropdown = ({ label, placeholder, options, value, onChange, required
                 onChange(option.value);
                 setIsOpen(false);
               }}
-              className={`w-full px-4 py-3.5 text-left text-sm transition-all duration-200 ${
+              className={`w-full px-6 py-4 text-left text-sm transition-all duration-200 border-b border-gray-100 dark:border-dark-border last:border-b-0 ${
                 value === option.value 
-                  ? 'bg-primary/10 border-l-4 border-primary text-secondary dark:text-white font-medium' 
-                  : 'text-[#5B6178] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-dark-border'
+                  ? 'bg-[#FFF7E2] border-l-4 border-l-primary text-secondary dark:text-white font-medium' 
+                  : index === 0 && !value
+                    ? 'bg-[#FFF7E2] text-[#5B6178] dark:text-gray-300'
+                    : 'text-[#5B6178] dark:text-gray-300 hover:bg-[#FFF7E2]'
               }`}
             >
               {option.label}
@@ -78,10 +99,13 @@ const CustomDropdown = ({ label, placeholder, options, value, onChange, required
   );
 };
 
-// Multi-Select Dropdown Component matching Figma
+// Multi-Select Dropdown Component matching Figma exactly
 const MultiSelectDropdown = ({ label, placeholder, options, value = [], onChange, required }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  
+  // Close dropdown when clicking outside
+  useClickOutside(dropdownRef, () => setIsOpen(false));
 
   const toggleOption = (optionValue) => {
     if (value.includes(optionValue)) {
@@ -107,23 +131,23 @@ const MultiSelectDropdown = ({ label, placeholder, options, value = [], onChange
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-left flex items-center justify-between focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
       >
-        <span className={value.length > 0 ? 'text-secondary dark:text-white' : 'text-gray-400'}>
+        <span className="text-[#5B6178]">
           {placeholder}
         </span>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-gray-400" />
+          <ChevronUp className="w-5 h-5 text-[#5B6178]" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-gray-400" />
+          <ChevronDown className="w-5 h-5 text-[#5B6178]" />
         )}
       </button>
 
-      {/* Selected Tags */}
+      {/* Selected Tags - shown below dropdown */}
       {value.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-2">
           {value.map(v => {
             const option = options.find(opt => opt.value === v);
             return (
-              <span key={v} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 dark:bg-dark-border rounded-lg text-sm text-secondary dark:text-gray-300">
+              <span key={v} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-dark-border rounded-lg text-sm text-secondary dark:text-gray-300">
                 {option?.label}
                 <button onClick={() => removeOption(v)} className="hover:text-red-500 transition-colors">
                   <X className="w-3.5 h-3.5" />
@@ -134,28 +158,30 @@ const MultiSelectDropdown = ({ label, placeholder, options, value = [], onChange
         </div>
       )}
 
-      {/* Dropdown Menu */}
+      {/* Dropdown Menu - matching Figma with checkboxes */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-xl shadow-lg overflow-hidden animate-fade-in">
+        <div className="absolute z-50 w-full mt-2 bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-xl shadow-lg overflow-hidden animate-fade-in max-h-80 overflow-y-auto">
           {options.map((option) => (
             <button
               key={option.value}
               type="button"
               onClick={() => toggleOption(option.value)}
-              className={`w-full px-4 py-3.5 text-left text-sm transition-all duration-200 flex items-center gap-3 ${
+              className={`w-full px-6 py-4 text-left text-sm transition-all duration-200 flex items-center gap-3 border-b border-gray-100 dark:border-dark-border last:border-b-0 ${
                 value.includes(option.value)
-                  ? 'text-secondary dark:text-white'
+                  ? 'text-[#5B6178] dark:text-white bg-white'
                   : 'text-[#5B6178] dark:text-gray-300'
               } hover:bg-gray-50 dark:hover:bg-dark-border`}
             >
-              <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
+              <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all flex-shrink-0 ${
                 value.includes(option.value)
                   ? 'bg-[#4B9FE4] border-[#4B9FE4]'
-                  : 'border-gray-300 dark:border-gray-600'
+                  : 'border-[#5B6178] dark:border-gray-500 bg-white'
               }`}>
                 {value.includes(option.value) && <Check className="w-3 h-3 text-white" />}
               </div>
-              {option.label}
+              <span className={value.includes(option.value) ? 'text-[#5B6178] font-medium' : 'text-[#5B6178]'}>
+                {option.label}
+              </span>
             </button>
           ))}
         </div>
@@ -848,7 +874,7 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
                 {/* Scheme Name */}
                 <CustomDropdown
                   label="Scheme Name"
-                  placeholder="Select Dropdown"
+                  placeholder="Select Scheme"
                   options={SCHEME_NAMES}
                   value={formData.schemeName}
                   onChange={(val) => updateFormData('schemeName', val)}
@@ -1006,8 +1032,8 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
             onClick={handleNext}
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary-hover transition-all duration-200"
           >
-            {currentStep === 7 ? 'Save Application' : 'Save And Next'}
-            <ArrowRight className="w-4 h-4" />
+            {currentStep === 7 ? 'Save Applications' : 'Save And Next'}
+            {currentStep !== 7 && <ArrowRight className="w-4 h-4" />}
           </button>
         </div>
       </div>
