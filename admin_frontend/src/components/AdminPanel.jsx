@@ -31,6 +31,7 @@ const AdminPanel = () => {
   const [viewMode, setViewMode] = useState('list'); // 'list', 'details', 'edit'
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const [schedulingApp, setSchedulingApp] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode');
     return saved ? JSON.parse(saved) : false;
@@ -230,11 +231,13 @@ const AdminPanel = () => {
           darkMode={darkMode}
           setDarkMode={setDarkMode}
           onLogout={handleLogout}
+          isMobileMenuOpen={isMobileMenuOpen}
+          setIsMobileMenuOpen={setIsMobileMenuOpen}
         />
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col min-h-screen">
-          <Header title={getPageTitle()} />
+          <Header title={getPageTitle()} onMobileMenuToggle={() => setIsMobileMenuOpen(true)} />
 
           <main className="flex-1 overflow-auto">
             {activeTab === 'dashboard' && (

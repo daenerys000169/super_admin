@@ -213,4 +213,65 @@
   .animate-delay-400 {
     animation-delay: 400ms;
   }
+  
+  /* Smooth page transitions */
+  .page-transition {
+    @apply transition-all duration-300 ease-in-out;
+  }
+  
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-transform duration-300;
+  }
+  
+  .hover-lift:hover {
+    @apply transform -translate-y-1;
+  }
+  
+  /* Glow effect for focus states */
+  .focus-glow:focus {
+    @apply ring-2 ring-primary/30 ring-offset-2;
+  }
+  
+  /* Stagger animation for list items */
+  .stagger-item {
+    animation: fadeInUp 0.4s ease-out forwards;
+    opacity: 0;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive text utilities */
+  @media (max-width: 640px) {
+    .responsive-text-xs {
+      font-size: 0.65rem;
+    }
+    .responsive-text-sm {
+      font-size: 0.75rem;
+    }
+  }
+  
+  /* Touch-friendly tap targets */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Safe area padding for mobile */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
 }

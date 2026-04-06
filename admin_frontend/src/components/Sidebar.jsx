@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -10,10 +10,31 @@ import {
   HelpCircle, 
   Moon, 
   Sun, 
-  LogOut 
+  LogOut,
+  Menu,
+  X
 } from 'lucide-react';
 
-const Sidebar = ({ activeTab, setActiveTab, darkMode, setDarkMode, onLogout }) => {
+const Sidebar = ({ activeTab, setActiveTab, darkMode, setDarkMode, onLogout, isMobileMenuOpen, setIsMobileMenuOpen }) => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check for mobile viewport
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Close mobile menu when tab changes
+  useEffect(() => {
+    if (isMobile && isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+    }
+  }, [activeTab]);
+
   const mainNavItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'applications', label: 'Applications', icon: FileText },
@@ -28,12 +49,12 @@ const Sidebar = ({ activeTab, setActiveTab, darkMode, setDarkMode, onLogout }) =
     { id: 'help', label: 'Help Center', icon: HelpCircle },
   ];
 
-  return (
-    <aside className="w-[200px] min-w-[200px] bg-white dark:bg-dark-card border-r border-gray-100 dark:border-dark-border flex flex-col h-screen sticky top-0 transition-colors duration-300">
+  const sidebarContent = (
+    <>
       {/* Logo */}
-      <div className="p-5 border-b border-gray-100 dark:border-dark-border">
+      <div className="p-5 border-b border-gray-100 dark:border-dark-border flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center flex-shrink-0">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#2B2B2B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               <path d="M2 17L12 22L22 17" stroke="#2B2B2B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -45,6 +66,15 @@ const Sidebar = ({ activeTab, setActiveTab, darkMode, setDarkMode, onLogout }) =
             <div className="text-primary font-semibold text-xs">योगदान</div>
           </div>
         </div>
+        {/* Close button for mobile */}
+        {isMobile && (
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="p-2 text-gray-500 hover:text-secondary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-dark-border rounded-xl transition-all lg:hidden"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Main Navigation */}
@@ -64,10 +94,10 @@ const Sidebar = ({ activeTab, setActiveTab, darkMode, setDarkMode, onLogout }) =
                 }`}
             >
               <Icon 
-                className={`w-5 h-5 transition-transform duration-300 group-hover:scale-110 
+                className={`w-5 h-5 transition-transform duration-300 group-hover:scale-110 flex-shrink-0
                   ${isActive ? 'text-primary' : ''}`} 
               />
-              <span>{item.label}</span>
+              <span className="truncate">{item.label}</span>
             </button>
           );
         })}
@@ -83,8 +113,8 @@ const Sidebar = ({ activeTab, setActiveTab, darkMode, setDarkMode, onLogout }) =
               onClick={() => setActiveTab(item.id)}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-dark-border transition-all duration-300"
             >
-              <Icon className="w-5 h-5" />
-              <span>{item.label}</span>
+              <Icon className="w-5 h-5 flex-shrink-0" />
+              <span className="truncate">{item.label}</span>
             </button>
           );
         })}
@@ -92,12 +122,12 @@ const Sidebar = ({ activeTab, setActiveTab, darkMode, setDarkMode, onLogout }) =
         {/* Dark Mode Toggle */}
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
-            {darkMode ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-            <span className="text-sm font-medium">Dark Mode</span>
+            {darkMode ? <Moon className="w-5 h-5 flex-shrink-0" /> : <Sun className="w-5 h-5 flex-shrink-0" />}
+            <span className="text-sm font-medium truncate">Dark Mode</span>
           </div>
           <button
             onClick={() => setDarkMode(!darkMode)}
-            className={`relative w-11 h-6 rounded-full transition-colors duration-300 ease-in-out ${
+            className={`relative w-11 h-6 rounded-full transition-colors duration-300 ease-in-out flex-shrink-0 ${
               darkMode ? 'bg-primary' : 'bg-gray-200'
             }`}
           >
@@ -114,12 +144,48 @@ const Sidebar = ({ activeTab, setActiveTab, darkMode, setDarkMode, onLogout }) =
           onClick={onLogout}
           className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all duration-300"
         >
-          <LogOut className="w-5 h-5" />
-          <span>Logout</span>
+          <LogOut className="w-5 h-5 flex-shrink-0" />
+          <span className="truncate">Logout</span>
         </button>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex w-[200px] min-w-[200px] bg-white dark:bg-dark-card border-r border-gray-100 dark:border-dark-border flex-col h-screen sticky top-0 transition-colors duration-300">
+        {sidebarContent}
+      </aside>
+
+      {/* Mobile Overlay */}
+      {isMobile && isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden animate-fade-in"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar */}
+      <aside 
+        className={`fixed top-0 left-0 z-50 w-[280px] max-w-[85vw] bg-white dark:bg-dark-card border-r border-gray-100 dark:border-dark-border flex flex-col h-screen transition-transform duration-300 ease-in-out lg:hidden ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        {sidebarContent}
+      </aside>
+    </>
   );
 };
+
+// Mobile Menu Button Component
+export const MobileMenuButton = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    className="p-2 text-gray-500 hover:text-secondary dark:hover:text-white hover:bg-gray-100 dark:hover:bg-dark-border rounded-xl transition-all lg:hidden"
+  >
+    <Menu className="w-6 h-6" />
+  </button>
+);
 
 export default Sidebar;
