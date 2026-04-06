@@ -71,10 +71,10 @@ const CustomDropdown = ({ label, placeholder, options, value, onChange, required
         </div>
       )}
 
-      {/* Dropdown Menu - matching Figma with yellow highlight on first/selected item */}
+      {/* Dropdown Menu - matching Figma: selected item has yellow bg + yellow left border */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-xl shadow-lg overflow-hidden animate-fade-in">
-          {options.map((option, index) => (
+        <div className="absolute z-50 w-full mt-1 bg-white dark:bg-dark-card border border-gray-200 dark:border-dark-border rounded-xl shadow-xl overflow-hidden animate-fade-in" style={{zIndex: 9999}}>
+          {options.map((option) => (
             <button
               key={option.value}
               type="button"
@@ -82,12 +82,10 @@ const CustomDropdown = ({ label, placeholder, options, value, onChange, required
                 onChange(option.value);
                 setIsOpen(false);
               }}
-              className={`w-full px-6 py-4 text-left text-sm transition-all duration-200 border-b border-gray-100 dark:border-dark-border last:border-b-0 ${
-                value === option.value 
-                  ? 'bg-[#FFF7E2] border-l-4 border-l-primary text-secondary dark:text-white font-medium' 
-                  : index === 0 && !value
-                    ? 'bg-[#FFF7E2] text-[#5B6178] dark:text-gray-300'
-                    : 'text-[#5B6178] dark:text-gray-300 hover:bg-[#FFF7E2]'
+              className={`w-full px-5 py-3.5 text-left text-sm transition-all duration-150 border-b border-gray-100 dark:border-dark-border last:border-b-0 ${
+                value === option.value
+                  ? 'bg-[#FFF7E2] border-l-[3px] border-l-primary text-[#5B6178] dark:text-white font-medium pl-4'
+                  : 'text-[#5B6178] dark:text-gray-300 hover:bg-[#FFF7E2] hover:text-secondary'
               }`}
             >
               {option.label}
@@ -641,18 +639,20 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
 
       case 3:
         return (
-          <div className="space-y-6 animate-fade-in">
-            {/* Sector */}
-            <div className="bg-white dark:bg-dark-card rounded-xl border border-gray-200 dark:border-dark-border p-6">
-              <div className="grid grid-cols-2 gap-6">
-                <CustomDropdown
-                  label="Sector"
-                  placeholder="Select Dropdown"
-                  options={SECTORS}
-                  value={formData.sector}
-                  onChange={(val) => updateFormData('sector', val)}
-                  showTags={true}
-                />
+          <div className="space-y-5 animate-fade-in">
+            {/* Card 1: Sector */}
+            <div className="bg-white dark:bg-dark-card rounded-xl border border-primary/40 p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Sector</label>
+                  <CustomDropdown
+                    placeholder="Select Dropdown"
+                    options={SECTORS}
+                    value={formData.sector}
+                    onChange={(val) => updateFormData('sector', val)}
+                    showTags={true}
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Other Sector</label>
                   <input
@@ -660,15 +660,16 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
                     value={formData.otherSector}
                     onChange={(e) => updateFormData('otherSector', e.target.value)}
                     placeholder="Text Input"
-                    className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-primary/50 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                    className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Business Description & Problem */}
-            <div className="bg-white dark:bg-dark-card rounded-xl border border-gray-200 dark:border-dark-border p-6">
-              <div className="grid grid-cols-2 gap-6">
+            {/* Card 2: Business Description, Problem, Target Audience, Revenue Model, Current Stage */}
+            <div className="bg-white dark:bg-dark-card rounded-xl border border-primary/40 p-6">
+              {/* Row 1: Business Description & Problem */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Business Description</label>
                   <textarea
@@ -691,7 +692,8 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6 mt-6">
+              {/* Row 2: Target Audience & Revenue Model */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                 <div>
                   <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Target Audience</label>
                   <textarea
@@ -716,8 +718,8 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
 
               {/* Current Stage */}
               <div className="mt-6">
+                <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Current Stage</label>
                 <CustomDropdown
-                  label="Current Stage"
                   placeholder="Select Dropdown"
                   options={CURRENT_STAGES}
                   value={formData.currentStage}
@@ -731,8 +733,8 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
 
       case 4:
         return (
-          <div className="space-y-6 animate-fade-in">
-            <div className="bg-white dark:bg-dark-card rounded-xl border border-gray-200 dark:border-dark-border p-6">
+          <div className="animate-fade-in">
+            <div className="bg-white dark:bg-dark-card rounded-xl border border-primary/40 p-6">
               {/* Founders Details */}
               <div>
                 <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Founders Details</label>
@@ -757,70 +759,40 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
                 />
               </div>
 
-              {/* Full-Time Employees Counter */}
+              {/* Full-Time Employees Counter — Figma: minus(border) | number(yellow bg) | plus(border) */}
               <div className="mt-6">
-                <NumberCounter
-                  label="Full-Time Employees"
-                  value={formData.fullTimeEmployees}
-                  onChange={(val) => updateFormData('fullTimeEmployees', val)}
-                  min={0}
-                  max={1000}
-                />
+                <label className="block text-sm font-medium text-secondary dark:text-white mb-3">Full-Time Employees</label>
+                <div className="inline-flex items-center rounded-lg overflow-hidden border border-gray-200 dark:border-dark-border">
+                  <button
+                    type="button"
+                    onClick={() => formData.fullTimeEmployees > 0 && updateFormData('fullTimeEmployees', formData.fullTimeEmployees - 1)}
+                    className="w-10 h-10 flex items-center justify-center bg-white dark:bg-dark-border hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-r border-gray-200 dark:border-dark-border"
+                    aria-label="Decrease"
+                  >
+                    <Minus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                  </button>
+                  <div className="w-14 h-10 flex items-center justify-center bg-primary text-white text-sm font-semibold select-none">
+                    {formData.fullTimeEmployees}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => formData.fullTimeEmployees < 1000 && updateFormData('fullTimeEmployees', formData.fullTimeEmployees + 1)}
+                    className="w-10 h-10 flex items-center justify-center bg-white dark:bg-dark-border hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-l border-gray-200 dark:border-dark-border"
+                    aria-label="Increase"
+                  >
+                    <Plus className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         );
 
       case 5:
+        // Figma shows Funding Information step as empty — content to be filled in
         return (
-          <div className="space-y-6 animate-fade-in">
-            <div className="bg-white dark:bg-dark-card rounded-xl border border-gray-200 dark:border-dark-border p-6">
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Funding Amount Required</label>
-                  <input
-                    type="text"
-                    value={formData.fundingAmountRequired}
-                    onChange={(e) => updateFormData('fundingAmountRequired', e.target.value)}
-                    placeholder="Rs. Amount"
-                    className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Previous Funding (if any)</label>
-                  <input
-                    type="text"
-                    value={formData.previousFunding}
-                    onChange={(e) => updateFormData('previousFunding', e.target.value)}
-                    placeholder="Rs. Amount"
-                    className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-6 mt-6">
-                <div>
-                  <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Current Revenue (if any)</label>
-                  <input
-                    type="text"
-                    value={formData.currentRevenue}
-                    onChange={(e) => updateFormData('currentRevenue', e.target.value)}
-                    placeholder="Rs. Amount"
-                    className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Purpose of Funding</label>
-                  <input
-                    type="text"
-                    value={formData.fundingPurpose}
-                    onChange={(e) => updateFormData('fundingPurpose', e.target.value)}
-                    placeholder="Text Input"
-                    className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
-                  />
-                </div>
-              </div>
-            </div>
+          <div className="animate-fade-in">
+            {/* Empty state matching Figma screenshot for Step 5 */}
           </div>
         );
 
@@ -858,10 +830,10 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
 
       case 7:
         return (
-          <div className="space-y-6 animate-fade-in">
-            <div className="bg-white dark:bg-dark-card rounded-xl border border-gray-200 dark:border-dark-border p-6">
-              <div className="grid grid-cols-2 gap-6">
-                {/* Interested Support */}
+          <div className="space-y-5 animate-fade-in">
+            {/* Card 1: Support Needed From Us + Scheme Name (two columns) */}
+            <div className="bg-white dark:bg-dark-card rounded-xl border border-primary/40 p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <MultiSelectDropdown
                   label="Support Needed From Us"
                   placeholder="Multi-Select Dropdown"
@@ -870,35 +842,35 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
                   onChange={(val) => updateFormData('interestedSupport', val)}
                   required
                 />
-
-                {/* Scheme Name */}
-                <CustomDropdown
-                  label="Scheme Name"
-                  placeholder="Select Scheme"
-                  options={SCHEME_NAMES}
-                  value={formData.schemeName}
-                  onChange={(val) => updateFormData('schemeName', val)}
-                  showTags={true}
-                />
+                <div>
+                  <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Scheme Name</label>
+                  <CustomDropdown
+                    placeholder="Select Dropdown"
+                    options={SCHEME_NAMES}
+                    value={formData.schemeName}
+                    onChange={(val) => updateFormData('schemeName', val)}
+                    showTags={true}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-dark-card rounded-xl border border-gray-200 dark:border-dark-border p-6">
-              {/* Website URL */}
-              <div>
-                <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Website URL</label>
-                <input
-                  type="url"
-                  value={formData.websiteUrl}
-                  onChange={(e) => updateFormData('websiteUrl', e.target.value)}
-                  placeholder="URL Input"
-                  className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
-                />
-              </div>
+            {/* Card 2: Website URL */}
+            <div className="bg-white dark:bg-dark-card rounded-xl border border-primary/40 p-6">
+              <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Website URL</label>
+              <input
+                type="url"
+                value={formData.websiteUrl}
+                onChange={(e) => updateFormData('websiteUrl', e.target.value)}
+                placeholder="URL Input"
+                className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+              />
+            </div>
 
-              {/* Social Media Links */}
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Social Media Links</label>
+            {/* Card 3: Social Media Links */}
+            <div className="bg-white dark:bg-dark-card rounded-xl border border-primary/40 p-6">
+              <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Social Media Links</label>
+              <div className="space-y-2">
                 {formData.socialMediaLinks.map((link, index) => (
                   <input
                     key={index}
@@ -906,53 +878,54 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
                     value={link}
                     onChange={(e) => updateSocialMediaLink(index, e.target.value)}
                     placeholder="Text Input"
-                    className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 mb-2"
+                    className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                   />
                 ))}
-                <button
-                  type="button"
-                  onClick={addSocialMediaLink}
-                  className="text-primary hover:text-primary-hover text-sm font-medium transition-colors"
-                >
-                  + Add More
-                </button>
               </div>
+              <button
+                type="button"
+                onClick={addSocialMediaLink}
+                className="mt-3 text-primary hover:text-primary-hover text-sm font-medium transition-colors"
+              >
+                + Add More
+              </button>
+            </div>
 
-              {/* Awards / Recognition */}
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Awards / Recognition</label>
-                <textarea
-                  value={formData.awardsRecognition}
-                  onChange={(e) => updateFormData('awardsRecognition', e.target.value)}
-                  placeholder="Textarea"
-                  rows={3}
-                  className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 resize-none"
-                />
-              </div>
+            {/* Card 4: Awards / Recognition */}
+            <div className="bg-white dark:bg-dark-card rounded-xl border border-primary/40 p-6">
+              <label className="block text-sm font-medium text-secondary dark:text-white mb-2">Awards / Recognition</label>
+              <textarea
+                value={formData.awardsRecognition}
+                onChange={(e) => updateFormData('awardsRecognition', e.target.value)}
+                placeholder="Textarea"
+                rows={3}
+                className="w-full px-4 py-3 bg-white dark:bg-dark-border border border-gray-200 dark:border-dark-border rounded-xl text-sm text-secondary dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 resize-none"
+              />
+            </div>
 
-              {/* How did you hear about us */}
-              <div className="mt-6">
-                <CustomDropdown
-                  label="How did you hear about us?"
-                  placeholder="Select hear about us"
-                  options={HEAR_ABOUT_US}
-                  value={formData.hearAboutUs}
-                  onChange={(val) => updateFormData('hearAboutUs', val)}
-                  showTags={true}
-                />
-              </div>
+            {/* Card 5: How did you hear about us */}
+            <div className="bg-white dark:bg-dark-card rounded-xl border border-primary/40 p-6">
+              <label className="block text-sm font-medium text-secondary dark:text-white mb-2">How did you hear about us?</label>
+              <CustomDropdown
+                placeholder="Select hear about us"
+                options={HEAR_ABOUT_US}
+                value={formData.hearAboutUs}
+                onChange={(val) => updateFormData('hearAboutUs', val)}
+                showTags={true}
+              />
             </div>
 
             {/* Confirmation Checkbox */}
-            <div className="flex items-start gap-3">
+            <div className="flex items-center gap-3 py-2">
               <button
                 type="button"
                 onClick={() => updateFormData('confirmInfo', !formData.confirmInfo)}
-                className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all ${
+                className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
                   formData.confirmInfo
                     ? 'bg-[#4B9FE4] border-[#4B9FE4]'
-                    : 'border-gray-300 dark:border-gray-600'
+                    : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-border'
                 }`}
+                aria-label="Confirm information"
               >
                 {formData.confirmInfo && <Check className="w-3 h-3 text-white" />}
               </button>
@@ -980,16 +953,17 @@ const StartupApplicationForm = ({ onClose, onSubmit, initialData }) => {
         </p>
       </div>
 
-      {/* Step Tabs */}
-      <div className="flex gap-1 mb-8 overflow-x-auto pb-2">
+      {/* Step Tabs — matching Figma: active = solid yellow pill, inactive = white with border */}
+      <div className="flex flex-wrap gap-1 mb-8">
         {STEPS.map((step) => (
           <button
             key={step.id}
+            type="button"
             onClick={() => setCurrentStep(step.id)}
-            className={`px-4 py-2.5 text-sm font-medium rounded-lg whitespace-nowrap transition-all duration-200 ${
+            className={`px-4 py-2 text-sm font-medium rounded-md whitespace-nowrap transition-all duration-200 focus:outline-none ${
               currentStep === step.id
-                ? 'bg-primary text-white'
-                : 'bg-white dark:bg-dark-card text-secondary dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-border'
+                ? 'bg-primary text-white shadow-sm'
+                : 'bg-white dark:bg-dark-card text-secondary dark:text-gray-300 border border-gray-200 dark:border-dark-border hover:bg-gray-50 dark:hover:bg-dark-border'
             }`}
           >
             {step.name}
