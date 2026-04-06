@@ -1,3 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=League+Spartan:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply font-sans text-secondary antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .dark body {
+    @apply bg-dark-bg text-dark-text;
+  }
+}
+
+@layer components {
+  /* Sidebar navigation item */
+  .nav-item {
+    @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-600 font-medium transition-all duration-300 ease-in-out;
+  }
+  
+  .nav-item:hover {
+    @apply bg-gray-100;
+  }
+  
+  .nav-item.active {
+    @apply bg-primary/10 text-primary font-semibold;
+  }
+  
+  .dark .nav-item {
+    @apply text-dark-muted;
+  }
+  
+  .dark .nav-item:hover {
+    @apply bg-dark-border;
+  }
+  
+  .dark .nav-item.active {
+    @apply bg-primary/20 text-primary;
+  }
+  
+  /* Stat cards */
+  .stat-card {
+    @apply rounded-2xl p-5 transition-all duration-300 ease-in-out;
+  }
+  
+  .stat-card:hover {
+    @apply shadow-card-hover transform -translate-y-1;
+  }
+  
+  /* Application cards */
+  .app-card {
+    @apply bg-white rounded-2xl border border-gray-200 p-5 transition-all duration-300 ease-in-out;
+  }
+  
+  .app-card:hover {
+    @apply shadow-card-hover border-gray-300;
+  }
+  
+  .dark .app-card {
+    @apply bg-dark-card border-dark-border;
+  }
+  
+  .dark .app-card:hover {
+    @apply border-gray-600;
+  }
+  
+  /* Button styles */
+  .btn-primary {
+    @apply bg-primary text-secondary font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 ease-in-out;
+  }
+  
+  .btn-primary:hover {
+    @apply bg-primary-hover shadow-lg transform scale-[1.02];
+  }
+  
+  .btn-outline {
+    @apply bg-white border-2 border-gray-200 text-secondary font-semibold py-2.5 px-5 rounded-xl transition-all duration-300 ease-in-out;
+  }
+  
+  .btn-outline:hover {
+    @apply border-gray-300 bg-gray-50;
+  }
+  
+  .dark .btn-outline {
+    @apply bg-dark-card border-dark-border text-dark-text;
+  }
+  
+  .dark .btn-outline:hover {
+    @apply border-gray-600 bg-dark-border;
+  }
+  
+  /* Status badges */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold;
+  }
+  
+  .badge-approved {
+    @apply bg-green-100 text-green-700;
+  }
+  
+  .badge-pending {
+    @apply bg-gray-100 text-gray-600;
+  }
+  
+  .badge-review {
+    @apply bg-yellow-100 text-yellow-700;
+  }
+  
+  .badge-rejected {
+    @apply bg-red-100 text-red-700;
+  }
+  
+  .dark .badge-approved {
+    @apply bg-green-900/30 text-green-400;
+  }
+  
+  .dark .badge-pending {
+    @apply bg-gray-800 text-gray-400;
+  }
+  
+  .dark .badge-review {
+    @apply bg-yellow-900/30 text-yellow-400;
+  }
+  
+  .dark .badge-rejected {
+    @apply bg-red-900/30 text-red-400;
+  }
+  
+  /* Toggle switch */
+  .toggle-switch {
+    @apply relative w-11 h-6 bg-gray-200 rounded-full transition-colors duration-300 ease-in-out cursor-pointer;
+  }
+  
+  .toggle-switch.active {
+    @apply bg-primary;
+  }
+  
+  .toggle-switch::after {
+    content: '';
+    @apply absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out;
+  }
+  
+  .toggle-switch.active::after {
+    @apply translate-x-5;
+  }
+  
+  /* Speedometer gauge */
+  .speedometer-bg {
+    stroke: #E5E7EB;
+    stroke-width: 12;
+    fill: none;
+  }
+  
+  .speedometer-fill {
+    stroke: #EDC523;
+    stroke-width: 12;
+    fill: none;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1.5s ease-out;
+  }
+  
+  .dark .speedometer-bg {
+    stroke: #3A3A3A;
+  }
+  
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+  
+  .dark ::-webkit-scrollbar-track {
+    @apply bg-dark-card;
+  }
+  
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-dark-border;
+  }
+}
+
+@layer utilities {
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .animate-delay-400 {
+    animation-delay: 400ms;
+  }
+}

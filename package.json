@@ -1,0 +1,16 @@
+{
+  "name": "super-admin-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd admin_frontend && npm run dev",
+    "build": "cd admin_frontend && npm run build",
+    "preview": "cd admin_frontend && npm run preview",
+    "install:all": "cd admin_frontend && npm install && cd ../backend && npm install"
+  },
+  "dependencies": {
+    "lucide-react": "^1.7.0",
+    "react": "^19.2.4",
+    "react-router-dom": "^7.14.0"
+  }
+}
