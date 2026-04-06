@@ -16,6 +16,7 @@ import UserLoginHistory from './UserLoginHistory';
 import StagePage from './StagePage';
 import DonationPage from './DonationPage';
 import SettingsPage from './SettingsPage';
+import CampaignsPage from './CampaignsPage';
 import ContactManagement from './ContactManagement';
 import ChatManagement from './ChatManagement';
 import AdminInterviewManager from './AdminInterviewManager';
@@ -292,13 +293,7 @@ const AdminPanel = () => {
             )}
 
             {activeTab === 'campaigns' && (
-              <div className="p-8 animate-fade-in">
-                <div className="bg-white dark:bg-dark-card rounded-xl border border-gray-100 dark:border-dark-border p-8 text-center">
-                  <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-secondary dark:text-white mb-2">Campaigns</h3>
-                  <p className="text-gray-600 dark:text-gray-400">Campaign management will be implemented here</p>
-                </div>
-              </div>
+              <CampaignsPage donations={donations} />
             )}
 
             {activeTab === 'settings' && (
