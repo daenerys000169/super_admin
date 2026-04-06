@@ -30,7 +30,7 @@ const STAGE_CONFIG = {
     title: 'Stage-4',
     subtitle: 'Due Diligence Process',
     chartType: 'pie',
-    colors: { iYogdan: '#2DD4BF', mahila: '#A78BFA' } // Teal + Light Purple
+    colors: { iYogdan: '#A78BFA', mahila: '#2DD4BF' } // Light Purple for iYogdan + Teal/Green for Mahila (matching Figma)
   }
 };
 
@@ -223,14 +223,14 @@ const StatCard = ({ value, label, percentChange, bgColor = 'bg-[#FEE5D9]' }) => 
   </div>
 );
 
-// Stage Info Sidebar Component
+// Stage Info Sidebar Component - matches current active stage
 const StageSidebar = ({ stageConfig, data }) => (
   <div className="w-full lg:w-80 flex-shrink-0">
-    <div className="bg-white dark:bg-dark-card rounded-xl border border-gray-200 dark:border-dark-border p-6 space-y-6 sticky top-4">
-      {/* Stage Header */}
+    <div className="bg-white dark:bg-dark-card rounded-xl border border-gray-200 dark:border-dark-border p-6 space-y-6 sticky top-4 transition-all duration-300">
+      {/* Stage Header - dynamically shows current stage info */}
       <div className="border-b border-gray-100 dark:border-dark-border pb-4">
-        <h3 className="text-2xl font-bold text-secondary dark:text-white">{stageConfig.title}</h3>
-        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{stageConfig.subtitle}</p>
+        <h3 className="text-2xl font-bold text-secondary dark:text-white transition-all duration-300">{stageConfig.title}</h3>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 transition-all duration-300">{stageConfig.subtitle}</p>
       </div>
 
       {/* IYogdan Applications Card */}
@@ -269,11 +269,17 @@ const StageSidebar = ({ stageConfig, data }) => (
 const StagePage = ({ applications = [] }) => {
   const [activeStage, setActiveStage] = useState('stage1');
   
-  // Dynamic data calculation from applications
+  // Dynamic data calculation from applications - uses real data when available
   const calculateStats = () => {
-    const total = applications.length || 1120;
-    const iYogdan = applications.filter(a => a.schemeName === 'iYogdan').length || 580;
-    const mahila = applications.filter(a => a.schemeName === 'Mahila Empowerment Scheme').length || 540;
+    const hasRealData = applications && applications.length > 0;
+    
+    const total = hasRealData ? applications.length : 1120;
+    const iYogdan = hasRealData 
+      ? applications.filter(a => a.schemeName === 'iYogdan' || a.scheme === 'iYogdan').length 
+      : 1120;
+    const mahila = hasRealData 
+      ? applications.filter(a => a.schemeName === 'Mahila Empowerment Scheme' || a.scheme === 'Mahila Empowerment').length 
+      : 1120;
     
     return {
       totalApplications: total,
@@ -282,44 +288,57 @@ const StagePage = ({ applications = [] }) => {
     };
   };
 
-  // Dynamic stage data
+  // Dynamic stage data - calculates from actual applications data
   const getStageData = (stage) => {
-    // For demo, using dynamic mock data that changes per stage
+    // Filter applications by stage if we have real data
+    const stageApps = applications.filter(app => {
+      if (stage === 'pending') return app.status === 'Pending';
+      if (stage === 'stage1') return app.stage === 1 || app.stage === 'Stage 1';
+      if (stage === 'stage2') return app.stage === 2 || app.stage === 'Stage 2';
+      if (stage === 'stage3') return app.stage === 3 || app.stage === 'Stage 3';
+      if (stage === 'stage4') return app.stage === 4 || app.stage === 'Stage 4';
+      return false;
+    });
+
+    const iYogdanApps = stageApps.filter(a => a.schemeName === 'iYogdan' || a.scheme === 'iYogdan');
+    const mahilaApps = stageApps.filter(a => a.schemeName === 'Mahila Empowerment Scheme' || a.scheme === 'Mahila Empowerment');
+
+    // Use actual data if available, otherwise use mock data matching Figma
     const baseData = {
       pending: {
-        chartData: { iYogdan: 521, mahila: 230 },
+        chartData: { iYogdan: iYogdanApps.length || 521, mahila: mahilaApps.length || 230 },
         totalIYogdan: 920,
-        pendingIYogdan: 521,
+        pendingIYogdan: iYogdanApps.length || 521,
         totalMahila: 580,
-        pendingMahila: 230
+        pendingMahila: mahilaApps.length || 230
       },
       stage1: {
-        chartData: { iYogdan: 521, mahila: 230 },
+        chartData: { iYogdan: iYogdanApps.length || 521, mahila: mahilaApps.length || 230 },
         totalIYogdan: 920,
-        pendingIYogdan: 521,
+        pendingIYogdan: iYogdanApps.length || 521,
         totalMahila: 580,
-        pendingMahila: 230
+        pendingMahila: mahilaApps.length || 230
       },
       stage2: {
-        chartData: { iYogdan: 521, mahila: 108 },
+        chartData: { iYogdan: iYogdanApps.length || 521, mahila: mahilaApps.length || 108 },
         totalIYogdan: 920,
-        pendingIYogdan: 521,
+        pendingIYogdan: iYogdanApps.length || 521,
         totalMahila: 602,
-        pendingMahila: 108
+        pendingMahila: mahilaApps.length || 108
       },
       stage3: {
-        chartData: { iYogdan: 521, mahila: 230 },
+        chartData: { iYogdan: iYogdanApps.length || 521, mahila: mahilaApps.length || 230 },
         totalIYogdan: 920,
-        pendingIYogdan: 521,
+        pendingIYogdan: iYogdanApps.length || 521,
         totalMahila: 580,
-        pendingMahila: 230
+        pendingMahila: mahilaApps.length || 230
       },
       stage4: {
-        chartData: { iYogdan: 521, mahila: 230 },
+        chartData: { iYogdan: iYogdanApps.length || 521, mahila: mahilaApps.length || 230 },
         totalIYogdan: 920,
-        pendingIYogdan: 521,
+        pendingIYogdan: iYogdanApps.length || 521,
         totalMahila: 580,
-        pendingMahila: 230
+        pendingMahila: mahilaApps.length || 230
       }
     };
     
@@ -403,8 +422,8 @@ const StagePage = ({ applications = [] }) => {
             <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{stageConfig.subtitle}</p>
           </div>
 
-          {/* Chart */}
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-8">
+          {/* Chart - key forces re-render for animation on stage change */}
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-8" key={activeStage}>
             {stageConfig.chartType === 'pie' ? (
               <>
                 <PieChart 
